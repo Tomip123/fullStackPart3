@@ -25,10 +25,15 @@ let data = [
 ]
 
 
-
-
 app.get('/api/persons', (req, res) => {
     res.json(data);
+});
+
+app.get('/info', (req, res) => {
+    const date = new Date();
+    const info = `<p>Phonebook has info for ${data.length} people</p>
+    <p>${date}</p>`;
+    res.send(info);
 });
 
 const PORT = 3001;
