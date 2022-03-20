@@ -7,6 +7,7 @@ const requestLogger = (req, res, next) => {
     console.log(`${req.method} request for '${req.url}' - ${JSON.stringify(req.body)}`);
     next();
 };
+
 app.use(requestLogger);
 app.use(morgan('tiny'));
 
