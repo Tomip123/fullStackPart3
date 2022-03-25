@@ -64,7 +64,7 @@ app.get('/api/persons/info', (req, res) => {
 });
 
 app.get('/api/persons/:id', (req, res, next) => {
-    const id = Number(req.params.id);
+    const id = req.params.id;
     Person.findById(id).then(result => {
         res.json(result);
     })
