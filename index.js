@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 app.use(express.json());
 app.use(cors());
+app.use(express.static('build'));
 
 const requestLogger = (req, res, next) => {
     console.log(`${req.method} request for '${req.url}' - ${JSON.stringify(req.body)}`);
