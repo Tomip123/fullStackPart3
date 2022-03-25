@@ -17,6 +17,16 @@ const requestLogger = (req, res, next) => {
 app.use(requestLogger);
 app.use(morgan('tiny'));
 
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message);
+    if (error.name === 'CastError') {
+        return res.status(400).send({ error: 'malformatted id' });
+    } else if (error.name === 'ValidationError') {
+        return res.status(400).json({ error: error.message });
+    }
+    next(error);
+};
+
 let data = [
     {
         "id": 1,
@@ -54,7 +64,7 @@ app.get('/api/persons/info', (req, res) => {
     });
 });
 
-app.get('/api/persons/:id', (req, res) => {
+app.get('/api/persons/:id', (req, res, next) => {
     const id = Number(req.params.id);
     Person.findById(id).then(result => {
         if (result) {
@@ -62,10 +72,11 @@ app.get('/api/persons/:id', (req, res) => {
         } else {
             res.status(404).end();
         }
-    });   
+    })
+        .catch(error => next(error));   
 });
 
-app.delete('/api/persons/:id', (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
     const id = req.params.id;
     Person.findByIdAndRemove(id).then(result => {
         if (result) {
@@ -73,8 +84,11 @@ app.delete('/api/persons/:id', (req, res) => {
         } else {
             res.status(404).json({ error: 'No person with given id' });
         }
-    });
+    })
+        .catch(error => next(error));
 });
+
+app.use(errorHandler);
 
 app.post('/api/persons', (req, res) => {
     const body = req.body;
