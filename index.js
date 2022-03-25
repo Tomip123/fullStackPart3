@@ -2,9 +2,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
-app.use(express.json());
-app.use(cors());
-app.use(express.static('build'));
+const Person = require('./modules/personCode');
 
 const requestLogger = (req, res, next) => {
     console.log(`${req.method} request for '${req.url}' - ${JSON.stringify(req.body)}`);
@@ -39,24 +37,27 @@ let data = [
 
 
 app.get('/api/persons', (req, res) => {
-    res.json(data);
+    Person.find({}).then(result => {
+        res.json(result);
+    });
 });
 
-app.get('/info', (req, res) => {
+app.get('/api/persons/info', (req, res) => {
     const date = new Date();
-    const info = `<p>Phonebook has info for ${data.length} people</p>
-    <p>${date}</p>`;
-    res.send(info);
+    Person.find({}).then(result => {
+        res.send(`<p>Phonebook has info for ${result.length} people</p><p>${date}</p>`);
+    });
 });
 
 app.get('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
-    const person = data.find(person => person.id === id);
-    if (person) {
-        res.json(person);
-    } else {
-        res.status(404).end();
-    }
+    Person.findById(id).then(result => {
+        if (result) {
+            res.json(result);
+        } else {
+            res.status(404).end();
+        }
+    });   
 });
 
 app.delete('/api/persons/:id', (req, res) => {
@@ -92,7 +93,7 @@ app.post('/api/persons', (req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
