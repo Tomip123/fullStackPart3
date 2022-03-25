@@ -67,13 +67,13 @@ app.get('/api/persons/:id', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
     const id = Number(req.params.id);
-    const person = data.find(person => person.id === id);
-    if (person) {
-        data = data.filter(person => person.id !== id);
-        res.status(204).end();
-    } else {
-        res.status(404).end();
-    }
+    Person.findByIdAndRemove(id).then(result => {
+        if (result) {
+            res.status(204).end();
+        } else {
+            res.status(404).json({ error: 'No person with given id' });
+        }
+    });
 });
 
 app.post('/api/persons', (req, res) => {
