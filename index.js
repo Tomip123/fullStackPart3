@@ -4,6 +4,10 @@ const morgan = require('morgan');
 const cors = require('cors');
 const Person = require('./modules/personCode');
 
+app.use(express.json());
+app.use(express.static('build'));
+app.use(express.static('public'));
+
 const requestLogger = (req, res, next) => {
     console.log(`${req.method} request for '${req.url}' - ${JSON.stringify(req.body)}`);
     next();
