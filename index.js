@@ -98,25 +98,21 @@ app.put('/api/persons/:id', (req, res, next) => {
         .catch(error => next(error));
 });
 
-app.use(errorHandler);
-
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', (req, res, next) => {
     const body = req.body;
-    if (!body.name || !body.number) {
-        return res.status(400).json({
-            error: 'name or number missing'
-        });
-    }
-    const personObj = new Person({
+    const person = new Person({
         name: body.name,
         number: body.number,
     });
-    personObj.save().then(savedPerson => {
-        data.concat(savedPerson);
-        res.json(savedPerson);
-    });
+    person.save()
+        .then(result => {
+            data.concat(result);
+            res.json(result);
+        })
+        .catch(error => next(error));
 });
 
+app.use(errorHandler);
 
 const PORT = process.env.PORT
 

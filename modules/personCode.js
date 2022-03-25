@@ -11,8 +11,8 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     });
 
 const personSchema = new mongoose.Schema({
-    name: String,
-    number: String
+    name: { type: 'String', required: true },
+    number: { type: 'String', required: true },
 });
 
 const Person = mongoose.model('Person', personSchema);
