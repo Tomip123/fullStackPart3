@@ -1,3 +1,3 @@
 Main repository for the exercises is located at: https://github.com/Tomip123/fullstackopen
 
-Heroku app: https://ancient-sea-74143.herokuapp.com/api/persons
+Heroku app: https://young-falls-79541.herokuapp.com/
